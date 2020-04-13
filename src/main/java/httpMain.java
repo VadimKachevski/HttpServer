@@ -77,9 +77,14 @@ public class httpMain {
                             name = nameL.get(0);
                         }
                         List<String> fileL = requestParameters.get("file");
-                        String file="0";
-                        if(fileL.size() >= 0) {
-                            file = fileL.get(0);
+//                        String file="0";
+//                        if(fileL.size() >= 0) {
+//                            file = fileL.get(0);
+//                        }
+                        String file = "";
+                        for (String t :
+                                fileL) {
+                            file = file+t;
                         }
                         ArrayList<dbHandler.questions> userAL = dbConnector.setComment(idquestion,txt,idCourse,name,file);
                         ObjectMapper mapper = new ObjectMapper();

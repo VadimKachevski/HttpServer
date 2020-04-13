@@ -76,7 +76,11 @@ public class httpMain {
                         if(nameL.size() >= 0) {
                             name = nameL.get(0);
                         }
-
+                        List<String> fileL = requestParameters.get("file");
+                        String file="0";
+                        if(fileL.size() >= 0) {
+                            file = fileL.get(0);
+                        }
                         ArrayList<dbHandler.questions> userAL = dbConnector.setComment(idquestion,txt,idCourse,name);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);

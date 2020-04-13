@@ -9,20 +9,15 @@ import dbHandler.dbConnector;
 import javax.imageio.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class httpMain {
     private static final String HOSTNAME = "localhost";
@@ -67,23 +62,39 @@ public class httpMain {
 //                        ObjectMapper mapper = new ObjectMapper();
 //                        String responseBody = mapper.writeValueAsString(userAL);
 
-                        BufferedImage image = ImageIO.read(new File("src/main/resources/img1.jpg"));
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        ImageIO.write(image, "jpg", byteArrayOutputStream);
-                        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//                        BufferedImage image = ImageIO.read(new File("src/main/resources/img1.jpg"));
+//                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//                        ImageIO.write(image, "jpg", byteArrayOutputStream);
+//                        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
 //                        exchange.getResponseBody().write(size);
 //                        exchange.getResponseBody().write(byteArrayOutputStream.toByteArray());
 //                        exchange.getResponseBody().flush();
-                        String responseBody = "";
+                        String base64Image = "";
+                        File file = new File("src/main/resources/img1.jpg");
+                        try (FileInputStream imageInFile = new FileInputStream(file)) {
+                            // Reading a Image file from file system
+                            byte imageData[] = new byte[(int) file.length()];
+                            imageInFile.read(imageData);
+                            base64Image = Base64.getEncoder().encodeToString(imageData);
+                        } catch (FileNotFoundException e) {
+                            System.out.println("Image not found" + e);
+                        } catch (IOException ioe) {
+                            System.out.println("Exception while reading the Image " + ioe);
+                        }
+
+
+
+
+                        String responseBody = base64Image;
                         headers.set("Access-Control-Allow-Origin","*");
                         headers.set("Access-Control-Allow-Credentials","true");
                         headers.set(HEADER_CONTENT_TYPE, String.format("application/json; charset=%s", CHARSET));
                         final byte[] rawResponseBody = responseBody.getBytes(CHARSET);
                         exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
-                        //exchange.getResponseBody().write(rawResponseBody);
+                        exchange.getResponseBody().write(rawResponseBody);
                        // exchange.getResponseBody().write("test".getBytes());
-                        exchange.getResponseBody().write(size);
-                        exchange.getResponseBody().write(byteArrayOutputStream.toByteArray());
+//                        exchange.getResponseBody().write(size);
+//                        exchange.getResponseBody().write(byteArrayOutputStream.toByteArray());
                         //exchange.getResponseBody().flush();
                         break;
                     case METHOD_OPTIONS:

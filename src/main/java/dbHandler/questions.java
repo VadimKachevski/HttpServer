@@ -8,6 +8,18 @@ public class questions {
     int masterQ;
     int score;
     int idCourse;
+    int comment;
+
+    public questions(int idquestions, String imgPath, String txt, String type, int masterQ, int score, int idCourse, int comment) {
+        this.idquestions = idquestions;
+        this.imgPath = imgPath;
+        this.txt = txt;
+        this.type = type;
+        this.masterQ = masterQ;
+        this.score = score;
+        this.idCourse = idCourse;
+        this.comment = comment;
+    }
 
     public questions(String imgPath, String txt, String type, int masterQ, int score, int idCourse) {
         this.imgPath = imgPath;
@@ -26,6 +38,14 @@ public class questions {
         this.masterQ = masterQ;
         this.score = score;
         this.idCourse = idCourse;
+    }
+
+    public int getComment() {
+        return comment;
+    }
+
+    public void setComment(int comment) {
+        this.comment = comment;
     }
 
     public int getIdquestions() {

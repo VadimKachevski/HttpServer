@@ -1,9 +1,6 @@
 package dbHandler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class dbConnector {
@@ -131,6 +128,40 @@ public class dbConnector {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
             Statement stmt=con.createStatement();
+            ResultSet rs=stmt.executeQuery("select * from questions WHERE idquestions="+questionID+" OR masterQ="+questionID);
+            questions us=null;
+            while(rs.next()) {
+                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
+                //us = new questions(rs.getInt("iddegree"), rs.getString("degreeName"), rs.getString("imgsrc"));
+                questionAr.add(us);
+                //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));
+            }
+            con.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return questionAr;
+    }
+    public static ArrayList<questions> setComment(String questionID,String txt,String idCourse,String name)
+    {
+        ArrayList<questions> questionAr = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
+            Statement stmt=con.createStatement();
+            // INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`) VALUES ('teeeeeeeeet', 'נוה מה', '1', '2', '1', '1', 'da');
+            String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setString (1, txt);
+            preparedStmt.setString (2, "תגובה");
+            preparedStmt.setInt (3, Integer.parseInt(questionID));
+            preparedStmt.setInt (4, 0);
+            preparedStmt.setInt (5, Integer.parseInt(idCourse));
+            preparedStmt.setInt (6, 1);
+            preparedStmt.setString (7, name);
+            preparedStmt.execute();
             ResultSet rs=stmt.executeQuery("select * from questions WHERE idquestions="+questionID+" OR masterQ="+questionID);
             questions us=null;
             while(rs.next()) {

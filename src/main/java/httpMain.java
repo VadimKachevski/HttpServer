@@ -40,8 +40,70 @@ public class httpMain {
         server.createContext("/course",new course());
         server.createContext("/question",new question());
         server.createContext("/comments",new comments());
+        server.createContext("/addcomment",new addcomment());
         server.start();
     }
+
+    private static class addcomment implements HttpHandler
+    {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            try {
+                final Headers headers = exchange.getResponseHeaders();
+
+                final String requestMethod = exchange.getRequestMethod().toUpperCase();
+                switch (requestMethod) {
+                    case METHOD_GET:
+                        final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
+                        // do something with the request parameters
+                        List<String> idquestions = requestParameters.get("idquestions");
+                        String idquestion="0";
+                        if(idquestions.size() >= 0) {
+                            idquestion = idquestions.get(0);
+                        }
+                        List<String> txts = requestParameters.get("txt");
+                        String txt="0";
+                        if(txts.size() >= 0) {
+                            txt = txts.get(0);
+                        }
+                        List<String> idCourseL = requestParameters.get("idCourse");
+                        String idCourse="0";
+                        if(idCourseL.size() >= 0) {
+                            idCourse = idCourseL.get(0);
+                        }
+                        List<String> nameL = requestParameters.get("name");
+                        String name="0";
+                        if(nameL.size() >= 0) {
+                            name = nameL.get(0);
+                        }
+
+                        ArrayList<dbHandler.questions> userAL = dbConnector.setComment(idquestion,txt,idCourse,name);
+                        ObjectMapper mapper = new ObjectMapper();
+                        String responseBody = mapper.writeValueAsString(userAL);
+                        headers.set("Access-Control-Allow-Origin","*");
+                        headers.set("Access-Control-Allow-Credentials","true");
+                        headers.set(HEADER_CONTENT_TYPE, String.format("application/json; charset=%s", CHARSET));
+                        final byte[] rawResponseBody = responseBody.getBytes(CHARSET);
+                        exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
+                        exchange.getResponseBody().write(rawResponseBody);
+                        exchange.getResponseBody().write("test".getBytes());
+                        break;
+                    case METHOD_OPTIONS:
+                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        exchange.sendResponseHeaders(STATUS_OK, NO_RESPONSE_LENGTH);
+                        break;
+                    default:
+                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        exchange.sendResponseHeaders(STATUS_METHOD_NOT_ALLOWED, NO_RESPONSE_LENGTH);
+                        break;
+                }
+            } finally {
+                exchange.close();
+            }
+
+        }
+    }
+
 
     private static class comments implements HttpHandler
     {

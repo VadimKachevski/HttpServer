@@ -75,7 +75,7 @@ public class dbConnector {
             }
 
 
-            ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ=-1 AND idCourse"+idCourse);
+            ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ=-1 AND idCourse="+idCourse);
             questions us=null;
             while(rs.next()) {
                 us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
@@ -131,7 +131,7 @@ public class dbConnector {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
             Statement stmt=con.createStatement();
-            ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ="+questionID+" AND comment="+"1");
+            ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ="+questionID+" AND comment=1");
             questions us=null;
             while(rs.next()) {
                 us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));

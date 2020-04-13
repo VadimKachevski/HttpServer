@@ -9,6 +9,20 @@ public class questions {
     int score;
     int idCourse;
     int comment;
+    String name;
+
+
+    public questions(int idquestions, String imgPath, String txt, String type, int masterQ, int score, int idCourse, int comment, String name) {
+        this.idquestions = idquestions;
+        this.imgPath = imgPath;
+        this.txt = txt;
+        this.type = type;
+        this.masterQ = masterQ;
+        this.score = score;
+        this.idCourse = idCourse;
+        this.comment = comment;
+        this.name = name;
+    }
 
     public questions(int idquestions, String imgPath, String txt, String type, int masterQ, int score, int idCourse, int comment) {
         this.idquestions = idquestions;
@@ -38,6 +52,15 @@ public class questions {
         this.masterQ = masterQ;
         this.score = score;
         this.idCourse = idCourse;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getComment() {

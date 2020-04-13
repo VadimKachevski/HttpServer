@@ -59,17 +59,26 @@ public class dbConnector {
         return degreeAr;
     }
 
-    public static ArrayList<questions> getQuestions()
+    public static ArrayList<questions> getQuestions(String courseName)
     {
         ArrayList<questions> questionAr = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
             Statement stmt=con.createStatement();
-            ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ=-1");
+
+            ResultSet rs1 = stmt.executeQuery("select * from course WHERE courseName="+"'" + courseName + "'");
+            int idCourse=1;
+            while (rs1.next())
+            {
+                idCourse= rs1.getInt("idcourse");
+            }
+
+
+            ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ=-1 AND idCourse"+idCourse);
             questions us=null;
             while(rs.next()) {
-                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"));
+                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
                 //us = new questions(rs.getInt("iddegree"), rs.getString("degreeName"), rs.getString("imgsrc"));
                 questionAr.add(us);
                 //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));
@@ -125,7 +134,7 @@ public class dbConnector {
             ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ="+questionID+" AND comment="+"1");
             questions us=null;
             while(rs.next()) {
-                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"));
+                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
                 //us = new questions(rs.getInt("iddegree"), rs.getString("degreeName"), rs.getString("imgsrc"));
                 questionAr.add(us);
                 //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));

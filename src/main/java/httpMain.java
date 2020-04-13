@@ -100,9 +100,20 @@ public class httpMain {
                     case METHOD_GET:
                         final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
                         // do something with the request parameters
-                        ArrayList<dbHandler.questions> userAL = dbConnector.getQuestions();
+
+
+                        List<String> lstring = requestParameters.get("courseName");
+                        String head="0";
+                        if(lstring.size() >= 0) {
+                            head = lstring.get(0);
+                        }
+                        ArrayList<dbHandler.questions> userAL = dbConnector.getQuestions(head);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);
+
+
+
+
                         headers.set("Access-Control-Allow-Origin","*");
                         headers.set("Access-Control-Allow-Credentials","true");
                         headers.set(HEADER_CONTENT_TYPE, String.format("application/json; charset=%s", CHARSET));

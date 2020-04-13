@@ -38,6 +38,7 @@ public class httpMain {
         server.createContext("/degree",new degree());
         server.createContext("/users",new users());
         server.createContext("/course",new course());
+
         server.start();
     }
 

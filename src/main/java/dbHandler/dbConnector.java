@@ -65,8 +65,8 @@ public class dbConnector {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
             Statement stmt=con.createStatement();
-
-            ResultSet rs1 = stmt.executeQuery("select * from degree WHERE degreeName="+courseName);
+            //courseName = "'" + courseName + "'";
+            ResultSet rs1 = stmt.executeQuery("select * from degree WHERE degreeName="+"'" + courseName + "'");
             int degreeID=1;
             while (rs1.next())
             {

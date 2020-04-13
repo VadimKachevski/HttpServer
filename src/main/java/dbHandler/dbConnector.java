@@ -144,7 +144,7 @@ public class dbConnector {
         }
         return questionAr;
     }
-    public static ArrayList<questions> setComment(String questionID,String txt,String idCourse,String name)
+    public static ArrayList<questions> setComment(String questionID,String txt,String idCourse,String name,String file)
     {
         ArrayList<questions> questionAr = new ArrayList<>();
         try {
@@ -152,7 +152,7 @@ public class dbConnector {
             Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
             Statement stmt=con.createStatement();
             // INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`) VALUES ('teeeeeeeeet', 'נוה מה', '1', '2', '1', '1', 'da');
-            String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`, `imgPath`) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setString (1, txt);
             preparedStmt.setString (2, "תגובה");
@@ -161,6 +161,8 @@ public class dbConnector {
             preparedStmt.setInt (5, Integer.parseInt(idCourse));
             preparedStmt.setInt (6, 1);
             preparedStmt.setString (7, name);
+            preparedStmt.setString (8, file);
+
             preparedStmt.execute();
             ResultSet rs=stmt.executeQuery("select * from questions WHERE idquestions="+questionID+" OR masterQ="+questionID);
             questions us=null;

@@ -81,7 +81,7 @@ public class httpMain {
                         if(fileL.size() >= 0) {
                             file = fileL.get(0);
                         }
-                        ArrayList<dbHandler.questions> userAL = dbConnector.setComment(idquestion,txt,idCourse,name);
+                        ArrayList<dbHandler.questions> userAL = dbConnector.setComment(idquestion,txt,idCourse,name,file);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);
                         headers.set("Access-Control-Allow-Origin","*");

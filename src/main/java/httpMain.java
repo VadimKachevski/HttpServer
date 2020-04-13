@@ -6,12 +6,17 @@ import com.sun.net.httpserver.HttpServer;
 import dbHandler.degree;
 import dbHandler.users;
 import dbHandler.dbConnector;
-
+import javax.imageio.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -38,10 +43,64 @@ public class httpMain {
         server.createContext("/degree",new degree());
         server.createContext("/users",new users());
         server.createContext("/course",new course());
-
+        server.createContext("/question",new question());
         server.start();
     }
 
+    private static class question implements HttpHandler
+    {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            try {
+                final Headers headers = exchange.getResponseHeaders();
+
+                final String requestMethod = exchange.getRequestMethod().toUpperCase();
+                switch (requestMethod) {
+                    case METHOD_GET:
+                        final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
+//                        List<String> lstring = requestParameters.get("degreeName");
+//                        String head="0";
+//                        if(lstring.size() >= 0) {
+//                            head = lstring.get(0);
+//                        }
+//                        ArrayList<dbHandler.course> userAL = dbConnector.getCourses(head);
+//                        ObjectMapper mapper = new ObjectMapper();
+//                        String responseBody = mapper.writeValueAsString(userAL);
+
+                        BufferedImage image = ImageIO.read(new File("src/main/resources/img1.jpg"));
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        ImageIO.write(image, "jpg", byteArrayOutputStream);
+                        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+//                        exchange.getResponseBody().write(size);
+//                        exchange.getResponseBody().write(byteArrayOutputStream.toByteArray());
+//                        exchange.getResponseBody().flush();
+                        String responseBody = "";
+                        headers.set("Access-Control-Allow-Origin","*");
+                        headers.set("Access-Control-Allow-Credentials","true");
+                        headers.set(HEADER_CONTENT_TYPE, String.format("application/json; charset=%s", CHARSET));
+                        final byte[] rawResponseBody = responseBody.getBytes(CHARSET);
+                        exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
+                        //exchange.getResponseBody().write(rawResponseBody);
+                       // exchange.getResponseBody().write("test".getBytes());
+                        exchange.getResponseBody().write(size);
+                        exchange.getResponseBody().write(byteArrayOutputStream.toByteArray());
+                        //exchange.getResponseBody().flush();
+                        break;
+                    case METHOD_OPTIONS:
+                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        exchange.sendResponseHeaders(STATUS_OK, NO_RESPONSE_LENGTH);
+                        break;
+                    default:
+                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        exchange.sendResponseHeaders(STATUS_METHOD_NOT_ALLOWED, NO_RESPONSE_LENGTH);
+                        break;
+                }
+            } finally {
+                exchange.close();
+            }
+
+        }
+    }
 
     private static class course implements HttpHandler
     {

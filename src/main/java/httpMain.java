@@ -53,49 +53,17 @@ public class httpMain {
                 switch (requestMethod) {
                     case METHOD_GET:
                         final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
-//                        List<String> lstring = requestParameters.get("degreeName");
-//                        String head="0";
-//                        if(lstring.size() >= 0) {
-//                            head = lstring.get(0);
-//                        }
-//                        ArrayList<dbHandler.course> userAL = dbConnector.getCourses(head);
-//                        ObjectMapper mapper = new ObjectMapper();
-//                        String responseBody = mapper.writeValueAsString(userAL);
-
-//                        BufferedImage image = ImageIO.read(new File("src/main/resources/img1.jpg"));
-//                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                        ImageIO.write(image, "jpg", byteArrayOutputStream);
-//                        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-//                        exchange.getResponseBody().write(size);
-//                        exchange.getResponseBody().write(byteArrayOutputStream.toByteArray());
-//                        exchange.getResponseBody().flush();
-                        String base64Image = "";
-                        File file = new File("src/main/resources/img1.jpg");
-                        try (FileInputStream imageInFile = new FileInputStream(file)) {
-                            // Reading a Image file from file system
-                            byte imageData[] = new byte[(int) file.length()];
-                            imageInFile.read(imageData);
-                            base64Image = Base64.getEncoder().encodeToString(imageData);
-                        } catch (FileNotFoundException e) {
-                            System.out.println("Image not found" + e);
-                        } catch (IOException ioe) {
-                            System.out.println("Exception while reading the Image " + ioe);
-                        }
-
-
-
-
-                        String responseBody = base64Image;
+                        // do something with the request parameters
+                        ArrayList<dbHandler.questions> userAL = dbConnector.getQuestions();
+                        ObjectMapper mapper = new ObjectMapper();
+                        String responseBody = mapper.writeValueAsString(userAL);
                         headers.set("Access-Control-Allow-Origin","*");
                         headers.set("Access-Control-Allow-Credentials","true");
                         headers.set(HEADER_CONTENT_TYPE, String.format("application/json; charset=%s", CHARSET));
                         final byte[] rawResponseBody = responseBody.getBytes(CHARSET);
                         exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
                         exchange.getResponseBody().write(rawResponseBody);
-                       // exchange.getResponseBody().write("test".getBytes());
-//                        exchange.getResponseBody().write(size);
-//                        exchange.getResponseBody().write(byteArrayOutputStream.toByteArray());
-                        //exchange.getResponseBody().flush();
+                        exchange.getResponseBody().write("test".getBytes());
                         break;
                     case METHOD_OPTIONS:
                         headers.set(HEADER_ALLOW, ALLOWED_METHODS);
@@ -256,3 +224,20 @@ public class httpMain {
         }
     }
 }
+
+
+//                        //****** FOR LATER IMG TO BASE 64
+//                        String base64Image = "";
+//                        File file = new File("src/main/resources/img1.jpg");
+//                        try (FileInputStream imageInFile = new FileInputStream(file)) {
+//                            // Reading a Image file from file system
+//                            byte imageData[] = new byte[(int) file.length()];
+//                            imageInFile.read(imageData);
+//                            base64Image = Base64.getEncoder().encodeToString(imageData);
+//                        } catch (FileNotFoundException e) {
+//                            System.out.println("Image not found" + e);
+//                        } catch (IOException ioe) {
+//                            System.out.println("Exception while reading the Image " + ioe);
+//                        }
+//                        String responseBody = base64Image;
+//                        //******** FOR LATER BASE 64

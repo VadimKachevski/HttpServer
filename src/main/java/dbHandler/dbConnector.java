@@ -58,6 +58,32 @@ public class dbConnector {
         }
         return degreeAr;
     }
+
+    public static ArrayList<questions> getQuestions()
+    {
+        ArrayList<questions> questionAr = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
+            Statement stmt=con.createStatement();
+            ResultSet rs=stmt.executeQuery("select * from questions");
+            questions us=null;
+            while(rs.next()) {
+                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"));
+                //us = new questions(rs.getInt("iddegree"), rs.getString("degreeName"), rs.getString("imgsrc"));
+                questionAr.add(us);
+                //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));
+            }
+            con.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return questionAr;
+    }
+
+
     public static ArrayList<course> getCourses(String courseName)
     {
         ArrayList<course> courseAR = new ArrayList<>();

@@ -45,16 +45,94 @@ public class httpMain {
         server.start();
     }
 
-    private static class addquestion implements HttpHandler
+    private static class addcomment implements HttpHandler
     {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+            try {
+                final Headers headers = exchange.getResponseHeaders();
+
+                final String requestMethod = exchange.getRequestMethod().toUpperCase();
+                switch (requestMethod) {
+                    case METHOD_GET:
+                        final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
+                        // do something with the request parameters
+
+
+                        List<String> idq = requestParameters.get("idquestions");
+                        String quid="";
+                        if(idq.size() >= 0)
+                        {
+                            quid = idq.get(0);
+                        }
+
+                        List<String> txts = requestParameters.get("txt");
+                        String txt="";
+//                        if(txts.size() >= 0) {
+//                            txt = txts.get(0);
+//                        }
+                        for (String s :
+                                txts) {
+                            txt+=s;
+                        }
+                        List<String> idCourseL = requestParameters.get("idCourse");
+                        String idCourse="";
+                        if(idCourseL.size() >= 0) {
+                            idCourse = idCourseL.get(0);
+                        }
+                        List<String> nameL = requestParameters.get("name");
+                        String name="";
+                        if(nameL.size() >= 0) {
+                            name = nameL.get(0);
+                        }
+//                        List<String> fileL = requestParameters.get("file");
+                        List<String> fileS = requestParameters.get("file2");
+//                        String file="0";
+//                        if(fileL.size() >= 0) {
+//                            file = fileL.get(0);
+//                        }
+                        String file = "";
+//                        for (String t :
+//                                fileL) {
+//                            file = file+t;
+//                        }
+//                        file = file+";";
+                        for (String t :
+                                fileS) {
+                            file = file+t;
+
+                        }
+                        file = file.substring(7);
+                        file = file.replaceAll(" ","+");
+                        ArrayList<dbHandler.questions> userAL = dbConnector.setComment(quid,txt,idCourse,name,file);
+                        ObjectMapper mapper = new ObjectMapper();
+                        String responseBody = mapper.writeValueAsString(userAL);
+                        headers.set("Access-Control-Allow-Origin","*");
+                        headers.set("Access-Control-Allow-Credentials","true");
+                        headers.set(HEADER_CONTENT_TYPE, String.format("application/json; charset=%s", CHARSET));
+                        final byte[] rawResponseBody = responseBody.getBytes(CHARSET);
+                        exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
+                        exchange.getResponseBody().write(rawResponseBody);
+                        exchange.getResponseBody().write("test".getBytes());
+                        break;
+                    case METHOD_OPTIONS:
+                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        exchange.sendResponseHeaders(STATUS_OK, NO_RESPONSE_LENGTH);
+                        break;
+                    default:
+                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        exchange.sendResponseHeaders(STATUS_METHOD_NOT_ALLOWED, NO_RESPONSE_LENGTH);
+                        break;
+                }
+            } finally {
+                exchange.close();
+            }
 
 
         }
     }
 
-    private static class addcomment implements HttpHandler
+    private static class addquestion implements HttpHandler
     {
         @Override
         public void handle(HttpExchange exchange) throws IOException {

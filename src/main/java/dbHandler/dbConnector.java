@@ -155,7 +155,7 @@ public class dbConnector {
             String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`, `imgPath`) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setString (1, txt);
-            preparedStmt.setString (2, "תגובה");
+            preparedStmt.setString (2, "'תגובה'");
             preparedStmt.setInt (3, Integer.parseInt(questionID));
             preparedStmt.setInt (4, 0);
             preparedStmt.setInt (5, Integer.parseInt(idCourse));

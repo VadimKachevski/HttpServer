@@ -102,8 +102,10 @@ public class httpMain {
                             file = file+t;
 
                         }
-                        file = file.substring(7);
-                        file = file.replaceAll(" ","+");
+                        if(file.length()  > 7) {
+                            file = file.substring(7);
+                            file = file.replaceAll(" ", "+");
+                        }
                         ArrayList<dbHandler.questions> userAL = dbConnector.setComment(quid,txt,idCourse,name,file);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);
@@ -144,6 +146,12 @@ public class httpMain {
                     case METHOD_GET:
                         final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
                         // do something with the request parameters
+//                        List<String> degreeIDL = requestParameters.get("degreeID");
+//                       String degid = "";
+//                        for (String s :
+//                                degreeIDL) {
+//                            degid+=s;
+//                        }
                         List<String> txts = requestParameters.get("txt");
                         String txt="";
 //                        if(txts.size() >= 0) {
@@ -180,14 +188,16 @@ public class httpMain {
                         file = file+t;
 
                     }
-                        List<String> typeL = requestParameters.get("type");
-                        String type = "";
-                        if(typeL.size() >=0)
-                        {
-                            type = typeL.get(0);
+                       // List<String> typeL = requestParameters.get("type");
+                        String type = "'מבחן'";
+//                        if(typeL.size() >=0)
+//                        {
+//                            type = typeL.get(0);
+//                        }
+                        if(file.length()  > 7) {
+                            file = file.substring(7);
+                            file = file.replaceAll(" ", "+");
                         }
-                        file = file.substring(7);
-                        file = file.replaceAll(" ","+");
                         ArrayList<dbHandler.questions> userAL = dbConnector.addQuestion(txt,idCourse,name,file,type);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);

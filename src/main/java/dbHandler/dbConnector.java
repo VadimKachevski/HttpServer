@@ -199,9 +199,10 @@ public class dbConnector {
             preparedStmt.setInt (6, 1);
             preparedStmt.setString (7, name);
             preparedStmt.setString (8, file);
-
+            int masterQ = -1;
             preparedStmt.execute();
-            ResultSet rs=stmt.executeQuery("select * from questions WHERE idCourse="+idCourse + "AND masterQ=-1");
+              ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ=-1 AND idCourse="+idCourse);
+            //ResultSet rs=stmt.executeQuery("select * from questions WHERE idCourse="+idCourse + "AND masterQ="+masterQ);
             questions us=null;
             while(rs.next()) {
                 us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));

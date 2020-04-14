@@ -56,7 +56,7 @@ public class dbConnector {
         return degreeAr;
     }
 
-    public static ArrayList<questions> getQuestions(String courseName)
+    public static ArrayList<questions> getQuestions(String courseName,String degreeID)
     {
         ArrayList<questions> questionAr = new ArrayList<>();
         try {
@@ -64,7 +64,7 @@ public class dbConnector {
             Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
             Statement stmt=con.createStatement();
 
-            ResultSet rs1 = stmt.executeQuery("select * from course WHERE courseName="+"'" + courseName + "'");
+            ResultSet rs1 = stmt.executeQuery("select * from course WHERE courseName="+"'" + courseName + "'"+" AND degreeID="+degreeID);
             int idCourse=1;
             while (rs1.next())
             {
@@ -180,4 +180,42 @@ public class dbConnector {
         }
         return questionAr;
     }
+
+    public static ArrayList<questions> addQuestion(String txt,String idCourse,String name,String file,String type)
+    {
+        ArrayList<questions> questionAr = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
+            Statement stmt=con.createStatement();
+            // INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`) VALUES ('teeeeeeeeet', 'נוה מה', '1', '2', '1', '1', 'da');
+            String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`, `imgPath`) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setString (1, txt);
+            preparedStmt.setString (2,"'"+type+"'");
+            preparedStmt.setInt (3, -1);
+            preparedStmt.setInt (4, 0);
+            preparedStmt.setInt (5, Integer.parseInt(idCourse));
+            preparedStmt.setInt (6, 1);
+            preparedStmt.setString (7, name);
+            preparedStmt.setString (8, file);
+
+            preparedStmt.execute();
+            ResultSet rs=stmt.executeQuery("select * from questions WHERE idCourse="+idCourse + "AND masterQ=-1");
+            questions us=null;
+            while(rs.next()) {
+                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
+                //us = new questions(rs.getInt("iddegree"), rs.getString("degreeName"), rs.getString("imgsrc"));
+                questionAr.add(us);
+                //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));
+            }
+            con.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return questionAr;
+    }
+
 }

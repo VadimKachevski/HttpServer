@@ -50,6 +50,7 @@ public class httpMain {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
 
+
         }
     }
 
@@ -65,23 +66,22 @@ public class httpMain {
                     case METHOD_GET:
                         final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
                         // do something with the request parameters
-                        List<String> idquestions = requestParameters.get("idquestions");
-                        String idquestion="0";
-                        if(idquestions.size() >= 0) {
-                            idquestion = idquestions.get(0);
-                        }
                         List<String> txts = requestParameters.get("txt");
-                        String txt="0";
-                        if(txts.size() >= 0) {
-                            txt = txts.get(0);
+                        String txt="";
+//                        if(txts.size() >= 0) {
+//                            txt = txts.get(0);
+//                        }
+                        for (String s :
+                                txts) {
+                            txt+=s;
                         }
                         List<String> idCourseL = requestParameters.get("idCourse");
-                        String idCourse="0";
+                        String idCourse="";
                         if(idCourseL.size() >= 0) {
                             idCourse = idCourseL.get(0);
                         }
                         List<String> nameL = requestParameters.get("name");
-                        String name="0";
+                        String name="";
                         if(nameL.size() >= 0) {
                             name = nameL.get(0);
                         }
@@ -100,10 +100,17 @@ public class httpMain {
                         for (String t :
                             fileS) {
                         file = file+t;
+
                     }
+                        List<String> typeL = requestParameters.get("type");
+                        String type = "";
+                        if(typeL.size() >=0)
+                        {
+                            type = typeL.get(0);
+                        }
                         file = file.substring(7);
                         file = file.replaceAll(" ","+");
-                        ArrayList<dbHandler.questions> userAL = dbConnector.setComment(idquestion,txt,idCourse,name,file);
+                        ArrayList<dbHandler.questions> userAL = dbConnector.addQuestion(txt,idCourse,name,file,type);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);
                         headers.set("Access-Control-Allow-Origin","*");
@@ -189,13 +196,20 @@ public class httpMain {
                         final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
                         // do something with the request parameters
 
-
-                        List<String> lstring = requestParameters.get("courseName");
-                        String head="0";
-                        if(lstring.size() >= 0) {
-                            head = lstring.get(0);
+                        String degreeID="";
+                        List<String> degreeID1 = requestParameters.get("degreeID");
+                        //String head="";
+                        for (String s :
+                                degreeID1) {
+                            degreeID+=s;
                         }
-                        ArrayList<dbHandler.questions> userAL = dbConnector.getQuestions(head);
+                        List<String> lstring = requestParameters.get("courseName");
+                        String head="";
+                        for (String s :
+                                lstring) {
+                            head+=s;
+                        }
+                        ArrayList<dbHandler.questions> userAL = dbConnector.getQuestions(head,degreeID);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);
 

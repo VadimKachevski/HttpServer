@@ -41,7 +41,16 @@ public class httpMain {
         server.createContext("/question",new question());
         server.createContext("/comments",new comments());
         server.createContext("/addcomment",new addcomment());
+        server.createContext("/addquestion",new addquestion());
         server.start();
+    }
+
+    private static class addquestion implements HttpHandler
+    {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+
+        }
     }
 
     private static class addcomment implements HttpHandler
@@ -76,18 +85,18 @@ public class httpMain {
                         if(nameL.size() >= 0) {
                             name = nameL.get(0);
                         }
-                        List<String> fileL = requestParameters.get("file");
+//                        List<String> fileL = requestParameters.get("file");
                         List<String> fileS = requestParameters.get("file2");
 //                        String file="0";
 //                        if(fileL.size() >= 0) {
 //                            file = fileL.get(0);
 //                        }
                         String file = "";
-                        for (String t :
-                                fileL) {
-                            file = file+t;
-                        }
-                        file = file+";";
+//                        for (String t :
+//                                fileL) {
+//                            file = file+t;
+//                        }
+//                        file = file+";";
                         for (String t :
                             fileS) {
                         file = file+t;

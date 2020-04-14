@@ -101,6 +101,8 @@ public class httpMain {
                             fileS) {
                         file = file+t;
                     }
+                        file = file.substring(7);
+                        file = file.replaceAll(" ","+");
                         ArrayList<dbHandler.questions> userAL = dbConnector.setComment(idquestion,txt,idCourse,name,file);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);

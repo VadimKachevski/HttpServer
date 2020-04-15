@@ -259,4 +259,41 @@ public class dbConnector {
         return null;
 
     }
+
+    public static users login(String mail, String pass) {
+        users us=null;
+        try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
+            Statement stmt=con.createStatement();
+            ResultSet rs=stmt.executeQuery("select * from users WHERE mail="+"'"+mail+"'");
+
+
+               // us = new users(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
+            if(rs.next()) {
+                //public users(int idUsers, String firstName, String lastName, int score, String mail, String password, String status) {
+                if (pass.equals(rs.getString("password"))) {
+                    us = new users(rs.getInt("idusers"), rs.getString("firstName"), rs.getString("lastName"), rs.getInt("score"), rs.getString("mail"));
+                    us.setStatus("200");
+                } else {
+                    us = new users();
+                    us.setStatus("400");
+                }
+                //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));
+            }
+            else
+            {
+                us = new users();
+                us.setStatus("400");
+            }
+            con.close();
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return us;
+    }
 }

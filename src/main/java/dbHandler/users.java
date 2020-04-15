@@ -9,7 +9,17 @@ public class users {
     int score;
     String mail;
     String password;
+    String status;
 
+    public users(int idUsers, String firstName, String lastName, int score, String mail, String password, String status) {
+        this.idUsers = idUsers;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.score = score;
+        this.mail = mail;
+        this.password = password;
+        this.status = status;
+    }
 
     public users(int idUsers, String firstName, String lastName, int score, String mail, String password) {
         this.idUsers = idUsers;
@@ -37,6 +47,17 @@ public class users {
         this.mail = mail;
     }
 
+    public users() {
+
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public int getIdUsers() {
         return idUsers;

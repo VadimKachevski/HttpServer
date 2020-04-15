@@ -43,8 +43,71 @@ public class httpMain {
         server.createContext("/addcomment",new addcomment());
         server.createContext("/addquestion",new addquestion());
         server.createContext("/registar",new registar());
+        server.createContext("/login",new login());
         server.start();
     }
+
+
+    public static class login implements HttpHandler
+    {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            try {
+                final Headers headers = exchange.getResponseHeaders();
+
+                final String requestMethod = exchange.getRequestMethod().toUpperCase();
+                switch (requestMethod) {
+                    case METHOD_GET:
+                        final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
+                        // do something with the request parameters
+
+                        String mail="";
+                        List<String> mailL = requestParameters.get("mail");
+                        //String head="";
+                        for (String s :
+                                mailL) {
+                            mail+=s;
+                        }
+                        List<String> passL = requestParameters.get("pass");
+                        String pass="";
+                        for (String s :
+                                passL) {
+                            pass+=s;
+                        }
+
+                        dbHandler.users userAL = dbConnector.login(mail,pass);
+                        //ObjectMapper mapper = new ObjectMapper();
+                        ObjectMapper mapper = new ObjectMapper();
+                        //mapper.
+                        String responseBody = mapper.writeValueAsString(userAL);
+
+
+
+
+                        headers.set("Access-Control-Allow-Origin","*");
+                        headers.set("Access-Control-Allow-Credentials","true");
+                        headers.set(HEADER_CONTENT_TYPE, String.format("application/json; charset=%s", CHARSET));
+                        final byte[] rawResponseBody = responseBody.getBytes(CHARSET);
+                        exchange.sendResponseHeaders(STATUS_OK, rawResponseBody.length);
+                        exchange.getResponseBody().write(rawResponseBody);
+                        exchange.getResponseBody().write("test".getBytes());
+                        break;
+                    case METHOD_OPTIONS:
+                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        exchange.sendResponseHeaders(STATUS_OK, NO_RESPONSE_LENGTH);
+                        break;
+                    default:
+                        headers.set(HEADER_ALLOW, ALLOWED_METHODS);
+                        exchange.sendResponseHeaders(STATUS_METHOD_NOT_ALLOWED, NO_RESPONSE_LENGTH);
+                        break;
+                }
+            } finally {
+                exchange.close();
+            }
+
+        }
+    }
+
 
 
     private static class registar implements HttpHandler

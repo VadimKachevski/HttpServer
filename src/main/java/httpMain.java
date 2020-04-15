@@ -19,6 +19,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class httpMain {
     private static final String HOSTNAME = "localhost";
@@ -45,6 +46,7 @@ public class httpMain {
         server.createContext("/addquestion",new addquestion());
         server.createContext("/registar",new registar());
         server.createContext("/login",new login());
+        server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
         server.start();
     }
 
@@ -53,7 +55,9 @@ public class httpMain {
     {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+
             try {
+
                 final Headers headers = exchange.getResponseHeaders();
 
                 final String requestMethod = exchange.getRequestMethod().toUpperCase();

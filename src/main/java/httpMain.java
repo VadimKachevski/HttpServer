@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import dbHandler.degree;
+import dbHandler.questions;
 import dbHandler.users;
 import dbHandler.dbConnector;
 import javax.imageio.*;
@@ -194,7 +195,12 @@ public class httpMain {
                         final Map<String, List<String>> requestParameters = getRequestParameters(exchange.getRequestURI());
                         // do something with the request parameters
 
-
+                        List<String> dateL = requestParameters.get("date");
+                        String date="";
+                        for (String s :
+                                dateL) {
+                            date+=s;
+                        }
                         List<String> idq = requestParameters.get("idquestions");
                         String quid="";
                         if(idq.size() >= 0)
@@ -242,7 +248,7 @@ public class httpMain {
                             file = file.substring(7);
                             file = file.replaceAll(" ", "+");
                         }
-                        ArrayList<dbHandler.questions> userAL = dbConnector.setComment(quid,txt,idCourse,name,file);
+                        ArrayList<dbHandler.questions> userAL = dbConnector.setComment(quid,txt,idCourse,name,file,date);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);
                         headers.set("Access-Control-Allow-Origin","*");
@@ -288,6 +294,13 @@ public class httpMain {
 //                                degreeIDL) {
 //                            degid+=s;
 //                        }
+                        List<String> dateL = requestParameters.get("date");
+                        String date="";
+                        for (String s :
+                                dateL) {
+                            date+=s;
+                        }
+
                         List<String> txts = requestParameters.get("txt");
                         String txt="";
 //                        if(txts.size() >= 0) {
@@ -307,6 +320,10 @@ public class httpMain {
                         if(nameL.size() >= 0) {
                             name = nameL.get(0);
                         }
+
+
+
+
 //                        List<String> fileL = requestParameters.get("file");
                         List<String> fileS = requestParameters.get("file2");
 //                        String file="0";
@@ -323,9 +340,9 @@ public class httpMain {
                             fileS) {
                         file = file+t;
 
-                    }
+                     }
                        // List<String> typeL = requestParameters.get("type");
-                        String type = "'מבחן'";
+                        String type = "מבחן";
 //                        if(typeL.size() >=0)
 //                        {
 //                            type = typeL.get(0);
@@ -334,7 +351,7 @@ public class httpMain {
                             file = file.substring(7);
                             file = file.replaceAll(" ", "+");
                         }
-                        ArrayList<dbHandler.questions> userAL = dbConnector.addQuestion(txt,idCourse,name,file,type);
+                        ArrayList<dbHandler.questions> userAL = dbConnector.addQuestion(txt,idCourse,name,file,type,date);
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);
                         headers.set("Access-Control-Allow-Origin","*");
@@ -434,6 +451,7 @@ public class httpMain {
                             head+=s;
                         }
                         ArrayList<dbHandler.questions> userAL = dbConnector.getQuestions(head,degreeID);
+
                         ObjectMapper mapper = new ObjectMapper();
                         String responseBody = mapper.writeValueAsString(userAL);
 

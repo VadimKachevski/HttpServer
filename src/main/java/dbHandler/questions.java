@@ -10,7 +10,20 @@ public class questions {
     int idCourse;
     int comment;
     String name;
+    String date;
 
+    public questions(int idquestions, String imgPath, String txt, String type, int masterQ, int score, int idCourse, int comment, String name, String date) {
+        this.idquestions = idquestions;
+        this.imgPath = imgPath;
+        this.txt = txt;
+        this.type = type;
+        this.masterQ = masterQ;
+        this.score = score;
+        this.idCourse = idCourse;
+        this.comment = comment;
+        this.name = name;
+        this.date = date;
+    }
 
     public questions(int idquestions, String imgPath, String txt, String type, int masterQ, int score, int idCourse, int comment, String name) {
         this.idquestions = idquestions;
@@ -54,6 +67,14 @@ public class questions {
         this.idCourse = idCourse;
     }
 
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getName() {
         return name;

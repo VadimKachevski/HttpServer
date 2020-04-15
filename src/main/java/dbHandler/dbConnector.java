@@ -134,7 +134,7 @@ public class dbConnector {
             ResultSet rs=stmt.executeQuery("select * from questions WHERE idquestions="+questionID+" OR masterQ="+questionID);
             questions us=null;
             while(rs.next()) {
-                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
+                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"),rs.getString("dateString"));
                 //us = new questions(rs.getInt("iddegree"), rs.getString("degreeName"), rs.getString("imgsrc"));
                 questionAr.add(us);
                 //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));
@@ -147,7 +147,7 @@ public class dbConnector {
         }
         return questionAr;
     }
-    public static ArrayList<questions> setComment(String questionID,String txt,String idCourse,String name,String file)
+    public static ArrayList<questions> setComment(String questionID,String txt,String idCourse,String name,String file,String date)
     {
         ArrayList<questions> questionAr = new ArrayList<>();
         try {
@@ -155,7 +155,7 @@ public class dbConnector {
             Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
             Statement stmt=con.createStatement();
             // INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`) VALUES ('teeeeeeeeet', 'נוה מה', '1', '2', '1', '1', 'da');
-            String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`, `imgPath`) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+            String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`, `imgPath`,`dateString`) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setString (1, txt);
             preparedStmt.setString (2, "'תגובה'");
@@ -165,12 +165,13 @@ public class dbConnector {
             preparedStmt.setInt (6, 1);
             preparedStmt.setString (7, name);
             preparedStmt.setString (8, file);
+            preparedStmt.setString (9, date);
 
             preparedStmt.execute();
             ResultSet rs=stmt.executeQuery("select * from questions WHERE idquestions="+questionID+" OR masterQ="+questionID);
             questions us=null;
             while(rs.next()) {
-                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
+                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"),rs.getString("dateString"));
                 //us = new questions(rs.getInt("iddegree"), rs.getString("degreeName"), rs.getString("imgsrc"));
                 questionAr.add(us);
                 //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));
@@ -184,7 +185,7 @@ public class dbConnector {
         return questionAr;
     }
 
-    public static ArrayList<questions> addQuestion(String txt,String idCourse,String name,String file,String type)
+    public static ArrayList<questions> addQuestion(String txt,String idCourse,String name,String file,String type,String date)
     {
         ArrayList<questions> questionAr = new ArrayList<>();
         try {
@@ -192,7 +193,7 @@ public class dbConnector {
             Connection con = DriverManager.getConnection(CONPARAM,USER,PASS);
             Statement stmt=con.createStatement();
             // INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`) VALUES ('teeeeeeeeet', 'נוה מה', '1', '2', '1', '1', 'da');
-            String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`, `imgPath`) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+            String query = "INSERT INTO `db`.`questions` (`txt`, `type`, `masterQ`, `score`, `idCourse`, `comment`, `name`, `imgPath`,`dateString`) VALUES (?, ?, ?, ?, ?, ?, ?,?,?)";
             PreparedStatement preparedStmt = con.prepareStatement(query);
             preparedStmt.setString (1, txt);
             preparedStmt.setString (2,"'"+type+"'");
@@ -202,13 +203,14 @@ public class dbConnector {
             preparedStmt.setInt (6, 1);
             preparedStmt.setString (7, name);
             preparedStmt.setString (8, file);
+            preparedStmt.setString (9, date);
             int masterQ = -1;
             preparedStmt.execute();
               ResultSet rs=stmt.executeQuery("select * from questions WHERE masterQ=-1 AND idCourse="+idCourse);
             //ResultSet rs=stmt.executeQuery("select * from questions WHERE idCourse="+idCourse + "AND masterQ="+masterQ);
             questions us=null;
             while(rs.next()) {
-                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"));
+                us = new questions(rs.getInt("idquestions"),rs.getString("imgPath"),rs.getString("txt"),rs.getString("type"),rs.getInt("masterQ"),rs.getInt("score"),rs.getInt("idCourse"),rs.getInt("comment"),rs.getString("name"),rs.getString("dateString"));
                 //us = new questions(rs.getInt("iddegree"), rs.getString("degreeName"), rs.getString("imgsrc"));
                 questionAr.add(us);
                 //  System.out.println(rs.getInt("idUsers") + "  " + rs.getString("firstName") + "  " + rs.getString("lastName") + " " + rs.getInt("score") + rs.getString("mail"));

@@ -1,5 +1,8 @@
 package dbHandler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -219,4 +222,41 @@ public class dbConnector {
         return questionAr;
     }
 
+    public static String registar(String mail, String pass,String firstName,String lastName) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode res = mapper.createObjectNode();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(CONPARAM, USER, PASS);
+            Statement stmt = con.createStatement();
+            ResultSet rs=stmt.executeQuery("select COUNT(idusers) AS rowcount from users WHERE mail="+"'"+mail+"'");
+            rs.next();
+            int counter = rs.getInt("rowcount");
+            if(counter == 0)
+            {
+                String query = "INSERT INTO `db`.`users` (`firstName`, `lastName`, `score`, `mail`, `password`) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement preparedStmt = con.prepareStatement(query);
+                preparedStmt.setString (1, firstName);
+                preparedStmt.setString (2,lastName);
+                preparedStmt.setInt (3, 0);
+                preparedStmt.setString (4, mail);
+                preparedStmt.setString (5, pass);
+                preparedStmt.execute();
+                res.put("status","200");
+            }
+            else
+            {
+                res.put("status","400");
+            }
+            return res.toString();
+
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 }

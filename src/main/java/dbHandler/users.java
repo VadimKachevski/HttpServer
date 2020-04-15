@@ -8,6 +8,19 @@ public class users {
     String lastName;
     int score;
     String mail;
+    String password;
+
+
+    public users(int idUsers, String firstName, String lastName, int score, String mail, String password) {
+        this.idUsers = idUsers;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.score = score;
+        this.mail = mail;
+        this.password = password;
+    }
+
+
 
     public users(String firstName, String lastName, int score, String mail) {
         this.firstName = firstName;
@@ -22,6 +35,23 @@ public class users {
         this.lastName = lastName;
         this.score = score;
         this.mail = mail;
+    }
+
+
+    public int getIdUsers() {
+        return idUsers;
+    }
+
+    public void setIdUsers(int idUsers) {
+        this.idUsers = idUsers;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getId() {
